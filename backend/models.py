@@ -1,8 +1,8 @@
 """The shapes of the API's requests and responses."""
 
-from typing import Literal
+from typing import Literal, Self
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
 
 Status = Literal["waiting", "in_progress", "waiting_for_sign_off", "decided"]
 DecisionKind = Literal["approve", "decline", "refer"]
@@ -95,3 +95,74 @@ class Handler(BaseModel):
     role: str
     email: str
     can_approve_over_limit: bool
+
+
+class RunStart(BaseModel):
+    thread_id: str
+
+
+class StepIn(BaseModel):
+    description: str
+
+
+class Step(BaseModel):
+    at: str
+    description: str
+
+
+class Progress(BaseModel):
+    thread_id: str
+    claim_id: str
+    started_at: str
+    finished_at: str | None
+    steps: list[Step]
+    seconds_remaining: int | None
+
+
+class DecisionIn(BaseModel):
+    decision: DecisionKind
+    payout: float = Field(ge=0)
+    reasons: str
+    policy_section: str
+    confidence: int = Field(ge=0, le=100)
+
+    @model_validator(mode="after")
+    def payout_fits_decision(self) -> Self:
+        if (self.decision == "approve") != (self.payout > 0):
+            raise ValueError(
+                "An approval needs a payout above zero, "
+                "and a decline or referral a payout of zero."
+            )
+        return self
+
+
+class SignOff(BaseModel):
+    handler_id: str
+    handler_name: str
+    at: str
+
+
+class Payment(BaseModel):
+    amount: float
+    paid_at: str
+
+
+class Decision(BaseModel):
+    claim_id: str
+    decision: DecisionKind
+    payout: float
+    reasons: str
+    policy_section: str
+    confidence: int
+    decided_at: str
+    needs_sign_off: bool
+    sign_off: SignOff | None
+    payment: Payment | None
+
+
+class PaymentIn(BaseModel):
+    amount: float
+
+
+class SignOffIn(BaseModel):
+    handler_id: str

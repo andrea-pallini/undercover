@@ -99,17 +99,17 @@ Adds the operations that change a claim: `start_run`, `record_step`, `finish_run
 
 Success criteria:
 
-- [ ] `npm run check:python` passes with at least 80% coverage, with a test for every state change and every refusal below
-- [ ] On CLM-1001, `start_run` moves the claim to `in_progress`, and a second `start_run` returns 409
-- [ ] `record_step` adds a step, and `get_progress` returns it with its time and a `seconds_remaining` from 0 to 30
-- [ ] Recording approve with a payout of 420.00 on CLM-1001 makes it `decided`. `pay_claim` with 420.00 returns 201, and paying again returns 409
-- [ ] On CLM-1002, recording approve with a payout of 1,100.00 makes it `waiting_for_sign_off`. `pay_claim` with 1,100.00 returns 409 with "A payout over $1,000.00 needs a handler's sign-off.", and `get_decision` shows no payment
-- [ ] `sign_off_claim` on CLM-1002 with HND-01 records Dana Whitfield's sign-off and a payment of 1,100.00, and the claim becomes `decided`
-- [ ] `sign_off_claim` on a claim that isn't waiting for sign-off returns 409, and an unknown handler returns 404
-- [ ] `pay_claim` with an amount that differs from the payout returns 409, and so does paying a declined claim
-- [ ] `record_decision` on a waiting claim returns 409. A decline with a payout of 50.00 returns 422, and so does a confidence of 120
-- [ ] `finish_run` on a run with no decision puts its claim back to `waiting`, and `start_run` on a decided claim returns 409
-- [ ] With the clock fixed, two finished runs of 20 and 40 seconds and a current run 10 seconds old give `seconds_remaining` of 20. A finished run gives null
+- [x] `npm run check:python` passes with at least 80% coverage, with a test for every state change and every refusal below
+- [x] On CLM-1001, `start_run` moves the claim to `in_progress`, and a second `start_run` returns 409
+- [x] `record_step` adds a step, and `get_progress` returns it with its time and a `seconds_remaining` from 0 to 30
+- [x] Recording approve with a payout of 420.00 on CLM-1001 makes it `decided`. `pay_claim` with 420.00 returns 201, and paying again returns 409
+- [x] On CLM-1002, recording approve with a payout of 1,100.00 makes it `waiting_for_sign_off`. `pay_claim` with 1,100.00 returns 409 with "A payout over $1,000.00 needs a handler's sign-off.", and `get_decision` shows no payment
+- [x] `sign_off_claim` on CLM-1002 with HND-01 records Dana Whitfield's sign-off and a payment of 1,100.00, and the claim becomes `decided`
+- [x] `sign_off_claim` on a claim that isn't waiting for sign-off returns 409, and an unknown handler returns 404
+- [x] `pay_claim` with an amount that differs from the payout returns 409, and so does paying a declined claim
+- [x] `record_decision` on a waiting claim returns 409. A decline with a payout of 50.00 returns 422, and so does a confidence of 120
+- [x] `finish_run` on a run with no decision puts its claim back to `waiting`, and `start_run` on a decided claim returns 409
+- [x] With the clock fixed, two finished runs of 20 and 40 seconds and a current run 10 seconds old give `seconds_remaining` of 20. A finished run gives null
 
 ## Phase 3: the UnderCover Agent
 
