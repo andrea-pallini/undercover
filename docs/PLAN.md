@@ -151,12 +151,12 @@ Builds the dashboard's pages in the UnderCover brand, reading from the API.
 
 Success criteria:
 
-- [ ] `npm run check:ts` passes: Prettier, ESLint, tsc in strict mode with no `any`, and vitest with at least 80% coverage
-- [ ] `npm run e2e` passes while `npm run dev` is running, and the decisions in `undercover.db` are unchanged afterwards
-- [ ] End-to-end: the queue shows 25 claims and "Waiting 25". Opening CLM-1001 shows its story, 3 items totaling $420.00, 4 documents, the Premium plan and the earlier claim CLM-0412
-- [ ] End-to-end: the instructions page shows the start of `backend/instructions.md` and has no input fields
-- [ ] Unit test: with the backend down, the queue says "The backend is not responding."
-- [ ] In the browser with the Playwright MCP server, at `http://localhost:5173`: the queue and a claim page use the brand's fonts and colors in light mode and in dark mode (checked with media emulation), with no outlines on panels, and the screenshots look right
+- [x] `npm run check:ts` passes: Prettier, ESLint, tsc in strict mode with no `any`, and vitest with at least 80% coverage
+- [x] `npm run e2e` passes while `npm run dev` is running, and the decisions in `undercover.db` are unchanged afterwards
+- [x] End-to-end: the queue shows 25 claims and "Waiting 25". Opening CLM-1001 shows its story, 3 items totaling $420.00, 4 documents, the Premium plan and the earlier claim CLM-0412
+- [x] End-to-end: the instructions page shows the start of `backend/instructions.md` and has no input fields
+- [x] Unit test: with the backend down, the queue says "The backend is not responding."
+- [x] In the browser with the Playwright MCP server, at `http://localhost:5173`: the queue and a claim page use the brand's fonts and colors in light mode and in dark mode (checked with media emulation), with no outlines on panels, and the screenshots look right
 
 ## Phase 5: the agent's work on the dashboard
 
