@@ -123,16 +123,16 @@ Replaces the hello-world agent with one that decides claims.
 
 Success criteria:
 
-- [ ] `npm run check:python` passes with at least 80% coverage, and no test calls a model
-- [ ] `GET /api/instructions` returns the text of `backend/instructions.md`
-- [ ] A test of the tools confirms the agent has exactly these: `get_claim`, `get_policy`, `get_claim_history`, `get_policy_wording`, `record_decision` and `pay_claim`
-- [ ] A scripted run with a stub model on CLM-1001 reads the claim, the policy, the history and the wording, then approves 420.00 and pays. The claim is `decided` and paid, and its steps are in order: "Reading claim CLM-1001", "Reading policy POL-2001", "Reading the customer's claim history", "Reading the policy wording", "Recording the decision: approve, $420.00", "Paying $420.00"
-- [ ] A scripted run that approves 1,100.00 and tries to pay leaves the claim `waiting_for_sign_off` with no payment, and records the step "Payment blocked: A payout over $1,000.00 needs a handler's sign-off."
-- [ ] A scripted run whose model fails partway finishes its run and puts the claim back to `waiting`
-- [ ] `start_agent` on a waiting claim returns 202 with a thread id and calls `run()` with the claim id and that thread id. On a decided claim it returns 409
-- [ ] Tests of the CLI confirm that `uv run -m agent CLM-1001` runs one claim, and that `uv run -m agent` runs each waiting claim
-- [ ] Live, with `npm run dev` running: `npm run agent -- CLM-1001` prints the agent's reply. `GET /api/claims/CLM-1001/decision` shows a decision with two or three sentences of reasons, a policy section and a confidence from 0 to 100, and `get_progress` shows at least five steps
-- [ ] Live: `npm run agent -- CLM-1003` (a $3,800 medical claim) ends in a valid state. If it approves over $1,000, the claim is waiting for sign-off, there's no payment, and the steps show the blocked payment
+- [x] `npm run check:python` passes with at least 80% coverage, and no test calls a model
+- [x] `GET /api/instructions` returns the text of `backend/instructions.md`
+- [x] A test of the tools confirms the agent has exactly these: `get_claim`, `get_policy`, `get_claim_history`, `get_policy_wording`, `record_decision` and `pay_claim`
+- [x] A scripted run with a stub model on CLM-1001 reads the claim, the policy, the history and the wording, then approves 420.00 and pays. The claim is `decided` and paid, and its steps are in order: "Reading claim CLM-1001", "Reading policy POL-2001", "Reading the customer's claim history", "Reading the policy wording", "Recording the decision: approve, $420.00", "Paying $420.00"
+- [x] A scripted run that approves 1,100.00 and tries to pay leaves the claim `waiting_for_sign_off` with no payment, and records the step "Payment blocked: A payout over $1,000.00 needs a handler's sign-off."
+- [x] A scripted run whose model fails partway finishes its run and puts the claim back to `waiting`
+- [x] `start_agent` on a waiting claim returns 202 with a thread id and calls `run()` with the claim id and that thread id. On a decided claim it returns 409
+- [x] Tests of the CLI confirm that `uv run -m agent CLM-1001` runs one claim, and that `uv run -m agent` runs each waiting claim
+- [x] Live, with `npm run dev` running: `npm run agent -- CLM-1001` prints the agent's reply. `GET /api/claims/CLM-1001/decision` shows a decision with two or three sentences of reasons, a policy section and a confidence from 0 to 100, and `get_progress` shows at least five steps
+- [x] Live: `npm run agent -- CLM-1003` (a $3,800 medical claim) ends in a valid state. If it approves over $1,000, the claim is waiting for sign-off, there's no payment, and the steps show the blocked payment
 
 The live checks call the model in `MODEL_NAME`. It isn't set in `.env` now, so they would use `openai/gpt-6-luna`, which is a paid model. To spend nothing, set `MODEL_NAME=openrouter/free` in `.env` first.
 

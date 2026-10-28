@@ -5,19 +5,24 @@ import sqlite3
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
+from pathlib import Path
 from statistics import fmean
 from typing import Annotated, Any
+from uuid import uuid4
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException
 
+from agent import main as agent
 from backend.db import database_path, get_db
 from backend.models import (
+    AgentStarted,
     Claim,
     ClaimHistory,
     ClaimSummary,
     Decision,
     DecisionIn,
     Handler,
+    Instructions,
     Payment,
     PaymentIn,
     Policy,
@@ -33,6 +38,7 @@ from backend.models import (
 from backend.seed import DATA, seed
 
 DEFAULT_RUN_SECONDS = 30.0
+INSTRUCTIONS = Path(__file__).parent / "instructions.md"
 
 
 @asynccontextmanager
@@ -232,6 +238,22 @@ def list_handlers(db: Db) -> list[Handler]:
     """List the claims handlers."""
     rows = db.execute("SELECT data FROM handlers ORDER BY handler_id").fetchall()
     return [Handler.model_validate_json(row["data"]) for row in rows]
+
+
+@app.get("/api/instructions", operation_id="get_instructions")
+def get_instructions() -> Instructions:
+    """Get the agent's instructions."""
+    return Instructions(text=INSTRUCTIONS.read_text(encoding="utf-8"))
+
+
+@app.post("/api/claims/{claim_id}/agent", operation_id="start_agent", status_code=202)
+def start_agent(claim_id: str, db: Db, background: BackgroundTasks) -> AgentStarted:
+    """Start the agent on a waiting claim in the background."""
+    if claim_status(db, claim_id) != "waiting":
+        raise HTTPException(409, f"{claim_id} isn't waiting, so the agent can't start.")
+    started = AgentStarted(thread_id=str(uuid4()))
+    background.add_task(agent.run, claim_id, started.thread_id)
+    return started
 
 
 @app.post("/api/claims/{claim_id}/runs", operation_id="start_run", status_code=201)

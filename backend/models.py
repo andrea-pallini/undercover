@@ -166,3 +166,11 @@ class PaymentIn(BaseModel):
 
 class SignOffIn(BaseModel):
     handler_id: str
+
+
+class Instructions(BaseModel):
+    text: str
+
+
+class AgentStarted(BaseModel):
+    thread_id: str
