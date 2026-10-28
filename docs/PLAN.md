@@ -184,11 +184,11 @@ Runs the real agent from the dashboard and brings the docs up to date.
 
 Success criteria:
 
-- [ ] Live, in the browser with the Playwright MCP server: on a waiting claim, pressing "Run the agent" shows "In progress", the steps arrive one by one with a falling time estimate, and the decision appears with its reasons, policy section and confidence
-- [ ] Live: if any claim run so far is waiting for sign-off, signing it off in the browser pays it and marks it decided
-- [ ] The queue page shows the claims the agent has decided, with their decisions and payouts
-- [ ] `docs/STATUS.md` is up to date
-- [ ] `npm run check` passes in full
+- [x] Live, in the browser with the Playwright MCP server: on a waiting claim, pressing "Run the agent" shows "In progress", the steps arrive one by one with a falling time estimate, and the decision appears with its reasons, policy section and confidence
+- [x] Live: if any claim run so far is waiting for sign-off, signing it off in the browser pays it and marks it decided
+- [x] The queue page shows the claims the agent has decided, with their decisions and payouts
+- [x] `docs/STATUS.md` is up to date
+- [x] `npm run check` passes in full
 
 Running the whole queue with `npm run agent` is up to you, since it makes 25 model runs. It's the closest the pilot comes to the spec's goal of handling claims straight through.
 

@@ -1,6 +1,6 @@
 # Status
 
-The pilot is being built from `docs/PLAN.md`. Phases 1 to 5 of 6 are done.
+The pilot from `docs/PLAN.md` is built: all 6 phases are done.
 
 ## Built
 
@@ -17,11 +17,13 @@ The pilot is being built from `docs/PLAN.md`. Phases 1 to 5 of 6 are done.
   - `#/instructions`: the agent's instructions, read only
 - `e2e/`: Playwright tests of the queue, a claim and the instructions, then of the workflow, with the test playing the agent's part through the API. They start their own backend on port 8001, with a fresh `e2e/undercover.db`, and their own dashboard on port 5174, so they never touch the dev database.
 
-A claim is `waiting`, `in_progress`, `waiting_for_sign_off` or `decided`. A run that ends without a decision puts its claim back to `waiting`.
+A claim is `waiting`, `in_progress`, `waiting_for_sign_off` or `decided`. A run that ends without a decision puts its claim back to `waiting`. Each decision carries the agent's own confidence, from 0 to 100. It is self-reported, and nothing checks it against the handlers' decisions yet.
 
 ## Running it
 
-- `npm run dev` starts the backend on port 8000 and the dashboard on port 5173
-- `npm run agent` works every waiting claim in turn, and `npm run agent -- CLM-1001` works one claim. The backend must be running. It uses the model in `MODEL_NAME`, or `openai/gpt-6-luna`.
-- `npm run reset` rebuilds `undercover.db` from `data/`
+- `npm run dev` starts the backend on port 8000 and the dashboard on http://localhost:5173
+- On the dashboard, "Run the agent" on a waiting claim decides it while you watch
+- `npm run agent` works every waiting claim in turn, and `npm run agent -- CLM-1001` works one claim. The backend must be running.
+- The agent uses the model in `MODEL_NAME` in `.env`, or `openai/gpt-6-luna` by default. A run takes about 30 seconds.
+- `npm run reset` rebuilds `undercover.db` from `data/`, which clears every decision
 - `npm run check` runs every check
