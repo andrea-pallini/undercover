@@ -3,21 +3,35 @@ import type {
   Claim,
   ClaimHistory,
   ClaimSummary,
+  Decision,
+  Handler,
   Instructions,
   Policy,
+  Progress,
 } from "./api";
 
-/** Stubs fetch with a response for each path. Any other path returns 404. */
+/**
+ * Stubs fetch with a response for each route, such as "/api/claims" or
+ * "POST /api/claims/CLM-1001/agent". A route can give a body to return as JSON,
+ * or a Response. Any other route returns 404.
+ */
 export function stubApi(routes: Record<string, unknown>) {
-  const fetchMock = vi.fn((path: string) =>
-    Promise.resolve(
-      path in routes
-        ? new Response(JSON.stringify(routes[path]))
+  const fetchMock = vi.fn((path: string, init?: RequestInit) => {
+    const route = init?.method === "POST" ? `POST ${path}` : path;
+    const body = routes[route];
+    if (body instanceof Response) return Promise.resolve(body.clone());
+    return Promise.resolve(
+      route in routes
+        ? new Response(JSON.stringify(body))
         : new Response("{}", { status: 404 }),
-    ),
-  );
+    );
+  });
   vi.stubGlobal("fetch", fetchMock);
   return fetchMock;
+}
+
+export function refusal(detail: string): Response {
+  return new Response(JSON.stringify({ detail }), { status: 409 });
 }
 
 export const summaries: ClaimSummary[] = [
@@ -112,4 +126,38 @@ export const claimRoutes = {
   "/api/claims/CLM-1001": claim,
   "/api/policies/POL-2001": policy,
   "/api/customers/CUS-3001/history": history,
+};
+
+export const handlers: Handler[] = [
+  {
+    handler_id: "HND-01",
+    name: "Dana Whitfield",
+    role: "Senior Claims Handler",
+    email: "dana.whitfield@undercover.example",
+    can_approve_over_limit: true,
+  },
+];
+
+export const decision: Decision = {
+  claim_id: "CLM-1001",
+  decision: "approve",
+  payout: 420,
+  reasons: "The flight was canceled for a crew problem.",
+  policy_section: "3. Trip Delay",
+  confidence: 85,
+  decided_at: "2026-10-28T09:00:20+00:00",
+  needs_sign_off: false,
+  sign_off: null,
+  payment: null,
+};
+
+export const progress: Progress = {
+  thread_id: "thread-1",
+  claim_id: "CLM-1001",
+  started_at: "2026-10-28T09:00:00+00:00",
+  finished_at: null,
+  steps: [
+    { at: "2026-10-28T09:00:05+00:00", description: "Reading claim CLM-1001" },
+  ],
+  seconds_remaining: 20,
 };

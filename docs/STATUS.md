@@ -1,6 +1,6 @@
 # Status
 
-The pilot is being built from `docs/PLAN.md`. Phases 1 to 4 of 6 are done.
+The pilot is being built from `docs/PLAN.md`. Phases 1 to 5 of 6 are done.
 
 ## Built
 
@@ -13,9 +13,9 @@ The pilot is being built from `docs/PLAN.md`. Phases 1 to 4 of 6 are done.
 - `agent/`: the UnderCover Agent. `run(claim_id, thread_id)` fetches its instructions, works the claim with six tools over the backend's API (read the claim, policy, claim history and wording; record the decision; pay), and records each step and refusal for the team.
 - `dashboard/`: React in the UnderCover brand, in light and dark mode, chosen by the address with no routing library:
   - `#/`: the claims queue, with a count of claims in each status. It refreshes every 5 seconds.
-  - `#/claims/CLM-1001`: the claim in full, its policy and the customer's earlier claims. It refreshes every 2 seconds.
+  - `#/claims/CLM-1001`: the claim in full, its policy and the customer's earlier claims; the agent's decision with its reasons, policy section, confidence and payment; the agent's steps with the time left while it works; a "Run the agent" button on waiting claims; and sign-off for payouts over $1,000.00. It refreshes every 2 seconds.
   - `#/instructions`: the agent's instructions, read only
-- `e2e/`: Playwright tests of the queue, a claim and the instructions. They start their own backend on port 8001, with a fresh `e2e/undercover.db`, and their own dashboard on port 5174, so they never touch the dev database.
+- `e2e/`: Playwright tests of the queue, a claim and the instructions, then of the workflow, with the test playing the agent's part through the API. They start their own backend on port 8001, with a fresh `e2e/undercover.db`, and their own dashboard on port 5174, so they never touch the dev database.
 
 A claim is `waiting`, `in_progress`, `waiting_for_sign_off` or `decided`. A run that ends without a decision puts its claim back to `waiting`.
 

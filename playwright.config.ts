@@ -7,6 +7,16 @@ export default defineConfig({
   outputDir: "e2e/test-results",
   reporter: "list",
   use: { baseURL: "http://localhost:5174" },
+  // The workflow tests change claims, so they run after the tests that read
+  // the queue as it starts.
+  projects: [
+    { name: "reading", testIgnore: /workflow\.spec\.ts/ },
+    {
+      name: "workflow",
+      testMatch: /workflow\.spec\.ts/,
+      dependencies: ["reading"],
+    },
+  ],
   webServer: [
     {
       command:

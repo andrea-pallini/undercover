@@ -86,3 +86,56 @@ export async function getJson<T>(path: string): Promise<T | null> {
   if (!response.ok) throw new Error(`${path} failed`);
   return (await response.json()) as T;
 }
+
+export interface Handler {
+  handler_id: string;
+  name: string;
+  role: string;
+  email: string;
+  can_approve_over_limit: boolean;
+}
+
+export interface Step {
+  at: string;
+  description: string;
+}
+
+export interface Progress {
+  thread_id: string;
+  claim_id: string;
+  started_at: string;
+  finished_at: string | null;
+  steps: Step[];
+  seconds_remaining: number | null;
+}
+
+export interface Decision {
+  claim_id: string;
+  decision: DecisionKind;
+  payout: number;
+  reasons: string;
+  policy_section: string;
+  confidence: number;
+  decided_at: string;
+  needs_sign_off: boolean;
+  sign_off: { handler_id: string; handler_name: string; at: string } | null;
+  payment: { amount: number; paid_at: string } | null;
+}
+
+/** Posts to the backend, and rejects with the backend's reason if it refuses. */
+export async function post(path: string, body: object): Promise<void> {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const { detail } = (await response.json()) as { detail: string };
+    throw new Error(detail);
+  }
+}
+
+/** The reason a request failed, to show to the handler. */
+export function reasonFor(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}

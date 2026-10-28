@@ -1,7 +1,7 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { ClaimPage } from "./ClaimPage";
-import { claimRoutes, history, stubApi } from "./testApi";
+import { claim, claimRoutes, history, refusal, stubApi } from "./testApi";
 
 afterEach(() => {
   cleanup();
@@ -55,4 +55,45 @@ it("says when the backend is down", async () => {
   expect(
     await screen.findByText("The backend is not responding."),
   ).toBeDefined();
+});
+
+it("runs the agent on a waiting claim", async () => {
+  const fetchMock = stubApi({
+    ...claimRoutes,
+    "POST /api/claims/CLM-1001/agent": { thread_id: "thread-1" },
+  });
+  render(<ClaimPage claimId="CLM-1001" />);
+  fireEvent.click(await screen.findByRole("button", { name: "Run the agent" }));
+  await vi.waitFor(() => {
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/claims/CLM-1001/agent",
+      expect.objectContaining({ method: "POST" }),
+    );
+  });
+});
+
+it("shows why the agent couldn't start", async () => {
+  stubApi({
+    ...claimRoutes,
+    "POST /api/claims/CLM-1001/agent": refusal(
+      "CLM-1001 isn't waiting, so the agent can't start.",
+    ),
+  });
+  render(<ClaimPage claimId="CLM-1001" />);
+  fireEvent.click(await screen.findByRole("button", { name: "Run the agent" }));
+  expect(
+    await screen.findByText(
+      "CLM-1001 isn't waiting, so the agent can't start.",
+    ),
+  ).toBeDefined();
+});
+
+it("offers the agent only on waiting claims", async () => {
+  stubApi({
+    ...claimRoutes,
+    "/api/claims/CLM-1001": { ...claim, status: "decided" },
+  });
+  render(<ClaimPage claimId="CLM-1001" />);
+  expect(await screen.findByText("Decided")).toBeDefined();
+  expect(screen.queryByRole("button", { name: "Run the agent" })).toBeNull();
 });

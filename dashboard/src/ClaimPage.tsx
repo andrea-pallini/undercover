@@ -1,11 +1,55 @@
+import { useState } from "react";
+import { ActivityPanel } from "./ActivityPanel";
 import type { Claim } from "./api";
+import { post, reasonFor } from "./api";
 import { BackendDown, StatusChip } from "./Common";
 import { HistoryPanel, PolicyPanel } from "./CustomerPanels";
+import { DecisionPanel } from "./DecisionPanel";
 import { date, label, money } from "./format";
 import { useApi } from "./useApi";
 
+function RunButton({
+  claimId,
+  onStarted,
+}: Readonly<{ claimId: string; onStarted: () => void }>) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const start = () => {
+    setBusy(true);
+    setError("");
+    post(`/api/claims/${claimId}/agent`, {}).then(
+      () => {
+        setBusy(false);
+        onStarted();
+      },
+      (reason: unknown) => {
+        setBusy(false);
+        setError(reasonFor(reason));
+      },
+    );
+  };
+
+  return (
+    <>
+      <button className="primary" type="button" disabled={busy} onClick={start}>
+        {busy ? "Starting the agent" : "Run the agent"}
+      </button>
+      {error && (
+        <p className="alert" role="alert">
+          {error}
+        </p>
+      )}
+    </>
+  );
+}
+
 export function ClaimPage({ claimId }: Readonly<{ claimId: string }>) {
-  const { data: claim, failed } = useApi<Claim>(`/api/claims/${claimId}`, 2000);
+  const {
+    data: claim,
+    failed,
+    reload,
+  } = useApi<Claim>(`/api/claims/${claimId}`, 2000);
 
   if (claim === null) return <p>There is no claim {claimId}.</p>;
   if (!claim) return failed ? <BackendDown /> : <p>Loading the claim</p>;
@@ -17,11 +61,18 @@ export function ClaimPage({ claimId }: Readonly<{ claimId: string }>) {
       <div className="claim-head">
         <h1 className="mono">{claim.claim_id}</h1>
         <StatusChip status={claim.status} />
+        {claim.status === "waiting" && (
+          <RunButton claimId={claim.claim_id} onStarted={reload} />
+        )}
       </div>
       <p className="lede">{claim.summary}</p>
       <div className="claim-grid">
-        <ClaimPanel claim={claim} />
         <div>
+          <DecisionPanel claimId={claim.claim_id} onSignedOff={reload} />
+          <ClaimPanel claim={claim} />
+        </div>
+        <div>
+          <ActivityPanel claimId={claim.claim_id} />
           <PolicyPanel policyId={claim.policy_id} />
           <HistoryPanel customerId={claim.customer_id} />
         </div>

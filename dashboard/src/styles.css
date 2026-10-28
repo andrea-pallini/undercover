@@ -330,3 +330,84 @@ tfoot th {
     padding-right: 1rem;
   }
 }
+
+.primary {
+  font: inherit;
+  font-weight: 600;
+  color: var(--midnight);
+  background: var(--sea-green);
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.claim-head .primary {
+  margin-left: auto;
+}
+
+.estimate {
+  background: var(--cerulean);
+  color: #ffffff;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.steps li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.4rem;
+  margin: 0 0 0.75rem;
+}
+
+.verdict .chip {
+  font-size: 0.9rem;
+}
+
+.reasons {
+  margin: 0 0 1rem;
+}
+
+.paid {
+  color: var(--green-ink);
+  font-weight: 600;
+}
+
+.notice {
+  background: var(--coral);
+  color: var(--midnight);
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+}
+
+.sign-off {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sign-off select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--inset);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+}

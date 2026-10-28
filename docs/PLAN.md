@@ -169,12 +169,12 @@ Adds the agent's live work, its decision and the sign-off to the claim page.
 
 Success criteria:
 
-- [ ] `npm run check:ts` passes with at least 80% coverage, with unit tests for each panel and for the button calling `start_agent`
-- [ ] End-to-end, playing the agent through the API on CLM-1004: after `start_run` and a step, the claim page shows "In progress", the step and "About N seconds left" without a reload. After an approval of 186.00 and a payment, it shows "Decided", "Approve", "$186.00", the confidence, the reasons and "Paid $186.00"
-- [ ] End-to-end on CLM-1002: after an approval of 1,100.00, the page shows "Waiting for sign-off", and a payment through the API returns 409. Choosing Dana Whitfield and pressing "Sign off and pay $1,100.00" changes the page to "Decided", "Paid $1,100.00" and "Signed off by Dana Whitfield"
-- [ ] End-to-end on CLM-1005: after a decline, the page shows "Decline", the reasons and no payment or sign-off
-- [ ] End-to-end: the queue shows the new statuses and decisions without a reload
-- [ ] "Run the agent" shows only on waiting claims
+- [x] `npm run check:ts` passes with at least 80% coverage, with unit tests for each panel and for the button calling `start_agent`
+- [x] End-to-end, playing the agent through the API on CLM-1004: after `start_run` and a step, the claim page shows "In progress", the step and "About N seconds left" without a reload. After an approval of 186.00 and a payment, it shows "Decided", "Approve", "$186.00", the confidence, the reasons and "Paid $186.00"
+- [x] End-to-end on CLM-1002: after an approval of 1,100.00, the page shows "Waiting for sign-off", and a payment through the API returns 409. Choosing Dana Whitfield and pressing "Sign off and pay $1,100.00" changes the page to "Decided", "Paid $1,100.00" and "Signed off by Dana Whitfield"
+- [x] End-to-end on CLM-1005: after a decline, the page shows "Decline", the reasons and no payment or sign-off
+- [x] End-to-end: the queue shows the new statuses and decisions without a reload
+- [x] "Run the agent" shows only on waiting claims
 
 ## Phase 6: the pilot end to end
 
