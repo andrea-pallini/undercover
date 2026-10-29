@@ -10,7 +10,7 @@ The UnderCover pilot, planned in `PLAN.md` and built in six committed phases:
 
 
 ## My journal
-- It was the first time I interacted with Code Claude via Terminal.
-- I am starting to learn the potential of Claude Code.
-- I got impressed by the potential of the results that can derive from just a simple PLAN.
-- I want to learn and practive more. 
+- Today was my first time interacting with Claude Code through the terminal.
+- I'm beginning to explore the potential of Claude Code and what it can do.
+- I was impressed by the results that can be achieved simply by creating a well-defined plan.
+- I'm excited to keep learning, experimenting, and practising to make the most of this tool.
